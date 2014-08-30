@@ -1,3 +1,3 @@
 Spree::Core::Engine.routes.draw do
-  # Add your extension routes here
+  match 'admin/orders/duplicate/:id', to: 'admin::orders#duplicate'
 end
