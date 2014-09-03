@@ -1,11 +1,15 @@
 Spree::Order.class_eval do
   def duplicate
     # clone addresses
-    new_shipping_address = shipping_address.dup
-    new_billing_address = billing_address.dup
+    unless shipping_address.nil?
+      new_shipping_address = shipping_address.dup
+      new_shipping_address.save!
+    end
 
-    new_shipping_address.save!
-    new_billing_address.save!
+    unless billing_address.nil?
+      new_billing_address = billing_address.dup
+      new_billing_address.save!
+    end
 
     # Create a new order
     new_order = Spree::Order.new
@@ -13,6 +17,8 @@ Spree::Order.class_eval do
     # reset shipping and billing addresses
     new_order.shipping_address = new_shipping_address
     new_order.billing_address = new_billing_address
+    new_order.email = email
+    new_order.user = user
 
     # calculate totals once
     new_order.update!
